@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>loggin user</title>
+    <style>
+        table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+        
+        td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+        }
+        
+        
+        
+        </style>
+    <script >
+        function StartFunction(button) {
+            var today = new Date()
+            var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    
+            var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    
+            var dateTime = date+' '+time;
+            button.value = dateTime;
+        }
+        function EndFunction(button) {
+            var today = new Date()
+            var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    
+            var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    
+            var dateTime = date+' '+time;
+            button.value = button.value+','+ dateTime;
+        }
+    </script>
+</head>
+<body>
+
+   
+
+
+
+    welcome {{request.user}}
+    <h1>LOGIN PAGE</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">TaskName:</label>
+            <input name="name">
+        </div>
+        <select>
+            {% for project in projects %}
+                <option value="{{project.id}}">{{project.project_name}}</option>
+            {% endfor %}
+        </select>
+        <div class="form-group">
+          
+            <button onclick="StartFunction()">START</button>
+        </div>
+        <div>
+            <b>ALL TASK DETAILS</b>
+            <table>
+                <tr>    
+                    <th>Task Title</th>
+                    <th>START TIME</th>
+                    <th>END TIME</th>
+                    <th>STOP THE TASK</th>
+                </tr>
+                {% for task in tasks %}
+                {% if task.status %}
+                <tr style="background-color: red;">
+                {% else %}
+                <tr style="background-color: darkgreen;">
+                {% endif %}
+                    <td>{{task.Task_title}}</td>
+                    <td>{{task.start_time}}</td>
+                    <td>{% if task.end_time %} {{task.end_time}} {% else %} still running {% endif %}</td>
+                    <td><button name ="end"  onclick="EndFunction">END</button></td>
+
+                </tr>
+                {% endfor %}
+            </table>
+             <button name="end">END TASK</button>
+        </div>
+
+        
+        
+       
+
+    </form>
+
+  
+
+    
+
+   
+    <a href="{% url 'login' %}"> LOGOUT</a>
+    
+</body>
+</html>
